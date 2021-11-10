@@ -31,8 +31,8 @@ const int ledChannelBlue = 2;
 const int resolution = 8 ;
 
 //Definicao de Credenciais de Rede WiFi
-const char* ssid = "covenant";
-const char* password = "Q=mcdt03";
+const char* ssid = "YOURWIFISSID";
+const char* password = "YOURPASSWORD";
 
 //Ajuste de Servidor
 AsyncWebServer server(80);
