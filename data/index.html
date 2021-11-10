@@ -1,0 +1,92 @@
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>ESPectrofotometro WEB</title>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+	<div class="topnav">
+		<h1>Brightness Control of LED</h1>
+	</div>
+	
+	<div class="content">
+		<div class="card-grid">
+				<div class="card">
+					<p class="card-title">Red LED</p>
+					<p class="switch">
+						<input type="range" onchange="updateSliderPWM(this)" id="slider1" min="0" max="100" step="1" value ="0" class="slider">
+					</p>
+					<p class="state">Brightness: <span id="sliderValue1"></span> &percnt;</p>
+				</div>
+				<div class="card">
+					<p class="card-title">Green LED</p>
+					<p class="switch">
+						<input type="range" onchange="updateSliderPWM(this)" id="slider2" min="0" max="100" step="1" value ="0" class="slider">
+					</p>
+					<p class="state">Brightness: <span id="sliderValue2"></span> &percnt;</p>
+				</div>
+				<div class="card">
+					<p class="card-title">Blue LED</p>
+					<p class="switch">
+						<input type="range" onchange="updateSliderPWM(this)" id="slider3" min="0" max="100" step="1" value ="0" class="slider">
+					</p>
+					<p class="state">Brightness: <span id="sliderValue3"></span> &percnt;</p>
+				</div>
+		</div>
+	</div>
+		<div class="topnav"> <h1>Readings of Spectrophotometer</h1></div>
+	<div id="chart-light" class="container"></div>
+
+         
+	<script>
+var chartT = new Highcharts.Chart({
+chart:{ renderTo : 'chart-light' },
+title: { text: 'Transmitted Light' },
+series: [{
+	showInLegend: false,
+	data: []
+}],
+plotOptions: {
+	spline: { animation: true,
+		dataLabels: { enabled: true }
+	},
+	series: { color: '#AE59DB' }
+},
+xAxis: { type: 'datetime',
+	dateTimeLabelFormats: { second: '%H:%M:%S' }
+},
+yAxis: {
+	title: { text: 'Transmitted Light (lux)' }
+},
+credits: { enabled: false }
+});
+
+setInterval(function ( ) {
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var x = (new Date()).getTime(),
+			y = parseFloat(this.responseText);
+		if(chartT.series[0].data.length > 40) {
+		chartT.series[0].addPoint([x, y], true, true, true);
+		} else {
+		chartT.series[0].addPoint([x, y], true, false, true);
+		}
+	}
+};
+xhttp.open("GET", "/light", true);
+xhttp.send();
+}, 500 ) ;
+
+</script>
+	<script src="script.js"></script>
+</body>
+</html>
